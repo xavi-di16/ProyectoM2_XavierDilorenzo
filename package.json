@@ -1,0 +1,23 @@
+{
+  "name": "miniblog-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch server.js",
+    "test": "vitest --globals"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^18.0.5",
+    "express": "^5.2.1",
+    "pg": "^8.23.1",
+    "supertest": "^7.3.0",
+    "swagger-ui-express": "^5.0.1",
+    "vitest": "^5.0.3",
+    "yamljs": "^0.3.0"
+  }
+}

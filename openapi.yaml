@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: MiniBlog API
+  version: 1.0.0
+  description: API REST para la gestión de autores, publicaciones y comentarios de MiniBlog.
+servers:
+  - url: http://localhost:3000
+    description: Servidor Local
+paths:
+  /authors:
+    get:
+      summary: Obtener todos los autores
+      responses:
+        '200':
+          description: Lista de autores
+    post:
+      summary: Crear un nuevo autor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                bio:
+                  type: string
+      responses:
+        '201':
+          description: Autor creado exitosamente
+        '400':
+          description: Faltan datos obligatorios o email duplicado
+  /authors/{id}:
+    get:
+      summary: Obtener un autor por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Datos del autor
+        '404':
+          description: Autor no encontrado
+    put:
+      summary: Actualizar un autor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Autor actualizado
+    delete:
+      summary: Eliminar un autor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Autor eliminado
+  /posts:
+    get:
+      summary: Obtener todos los posts
+      responses:
+        '200':
+          description: Lista de posts
+    post:
+      summary: Crear un nuevo post
+      responses:
+        '201':
+          description: Post creado
+  /posts/{id}:
+    get:
+      summary: Obtener un post por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Datos del post
