@@ -1,6 +1,6 @@
 const { loadEnvFile } = require('node:process');
 
-// Solo cargamos el .env si no estamos en producción (Railway)
+
 if (process.env.NODE_ENV !== 'production') {
     loadEnvFile('.env');
 }
@@ -14,18 +14,17 @@ const app = express();
 const authorsRouter = require('./routes/authors');
 const postsRouter = require('./routes/posts');
 const commentsRouter = require('./routes/comments');
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
-// Middlewares básicos
-app.use(express.json()); // Para que Express entienda el body en formato JSON
+
+app.use(express.json()); 
 app.use('/authors', authorsRouter);
 app.use('/posts', postsRouter);
 app.use('/comments', commentsRouter);
 
-// Ruta de Swagger UI
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Ruta raíz de prueba
 app.get('/', (req, res) => {
     res.json({ mensaje: 'API MiniBlog funcionando' });
 });
