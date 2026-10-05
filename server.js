@@ -26,7 +26,15 @@ app.use('/comments', commentsRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/', (req, res) => {
-    res.json({ mensaje: 'API MiniBlog funcionando' });
+    res.json({ 
+        mensaje: 'API MiniBlog funcionando',
+        rutasDisponibles: [
+            '/authors',
+            '/posts',
+            '/comments',
+            '/api-docs'
+        ]
+    });
 });
 
 app.use(errorHandler);
