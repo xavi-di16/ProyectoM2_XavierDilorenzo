@@ -35,7 +35,7 @@ DB_PASSWORD=tu_contraseña_local
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=miniblog_db
-PORT=3000
+PORT=8080
 ```
 
 ### 3. Ejecutar la Aplicación
@@ -43,7 +43,7 @@ Inicia el servidor en modo desarrollo:
 ```bash
 npm run dev
 ```
-La API estará disponible en `http://localhost:3000`.
+La API estará disponible en `http://localhost:8080`.
 
 ## Testing
 El proyecto cuenta con una suite de pruebas automatizadas para validar los endpoints principales y el manejo de errores. Para ejecutarlas, utiliza:
