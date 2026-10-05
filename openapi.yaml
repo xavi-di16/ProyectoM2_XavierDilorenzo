@@ -6,7 +6,7 @@ info:
 servers:
   - url: https://proyectom2xavierdilorenzo-production.up.railway.app
     description: Servidor de Producción (Railway)
-  - url: http://localhost:3000
+  - url: http://localhost:8080
     description: Servidor Local
 paths:
   /authors:
