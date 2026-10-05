@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API REST para la gestión de autores, publicaciones y comentarios de MiniBlog.
 servers:
-  - url: https://proyectom2xavierdilorenzo-production.up.railway.app
+  - url: https://proyectom2xavierdilorenzo-production-2821.up.railway.app
     description: Servidor de Producción (Railway)
   - url: http://localhost:8080
     description: Servidor Local
