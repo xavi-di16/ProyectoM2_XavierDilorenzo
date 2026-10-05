@@ -2,6 +2,44 @@ const express = require('express');
 const router = express.Router();
 const authorService = require('../services/authorService');
 
+// Regex estricta: parte local sin puntos al inicio/final ni consecutivos, dominio con TLD de 2+ letras
+const EMAIL_REGEX = /^[a-zA-Z0-9]+([._%+-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*(\.[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*)*\.[a-zA-Z]{2,}$/;
+
+const badRequest = (message) => {
+    const error = new Error(message);
+    error.statusCode = 400;
+    return error;
+};
+
+// partial = true -> PUT: solo se validan los campos enviados (pero debe venir al menos uno)
+const validateAuthor = ({ name, email, bio }, partial = false) => {
+    if (partial && name === undefined && email === undefined && bio === undefined) {
+        throw badRequest('Debes enviar al menos un campo a actualizar: name, email o bio');
+    }
+
+    if (!partial || name !== undefined) {
+        if (typeof name !== 'string' || name.trim().length < 3) {
+            throw badRequest('El nombre es obligatorio y debe tener al menos 3 caracteres');
+        }
+        if (name.trim().length > 100) {
+            throw badRequest('El nombre no puede superar los 100 caracteres');
+        }
+    }
+
+    if (!partial || email !== undefined) {
+        if (typeof email !== 'string' || email.trim() === '') {
+            throw badRequest('El email es obligatorio');
+        }
+        if (!EMAIL_REGEX.test(email.trim())) {
+            throw badRequest('El formato del email no es válido');
+        }
+    }
+
+    if (bio !== undefined && bio !== null && typeof bio !== 'string') {
+        throw badRequest('La bio debe ser un texto');
+    }
+};
+
 // GET /authors - Listar todos
 router.get('/', async (req, res, next) => {
     try {
@@ -30,19 +68,17 @@ router.get('/:id', async (req, res, next) => {
 // POST /authors - Crear autor
 router.post('/', async (req, res, next) => {
     try {
+        validateAuthor(req.body);
         const { name, email, bio } = req.body;
-        
-        // Validación obligatoria: name no vacío
-        if (!name || name.trim() === '') {
-            const error = new Error('El nombre no puede estar vacío');
-            error.statusCode = 400;
-            throw error;
-        }
 
-        const newAuthor = await authorService.createAuthor(name, email, bio);
+        const newAuthor = await authorService.createAuthor(
+            name.trim(),
+            email.trim().toLowerCase(),
+            bio
+        );
         res.status(201).json(newAuthor);
     } catch (error) {
-        // Manejo de error específico de Postgres: email único (código 23505)
+        // Email único (Postgres 23505)
         if (error.code === '23505') {
             error.statusCode = 400;
             error.message = 'El email ya está registrado';
@@ -54,9 +90,16 @@ router.post('/', async (req, res, next) => {
 // PUT /authors/:id - Actualizar autor
 router.put('/:id', async (req, res, next) => {
     try {
+        validateAuthor(req.body, true);
         const { name, email, bio } = req.body;
-        const updatedAuthor = await authorService.updateAuthor(req.params.id, name, email, bio);
-        
+
+        const updatedAuthor = await authorService.updateAuthor(
+            req.params.id,
+            name !== undefined ? name.trim() : undefined,
+            email !== undefined ? email.trim().toLowerCase() : undefined,
+            bio
+        );
+
         if (!updatedAuthor) {
             const error = new Error('Autor no encontrado para actualizar');
             error.statusCode = 404;
@@ -81,7 +124,10 @@ router.delete('/:id', async (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
-        res.status(204).send(); // 204 significa éxito pero sin contenido de respuesta
+        res.status(200).json({
+            mensaje: `El autor '${deletedAuthor.name}' fue eliminado correctamente del sistema`,
+            registro_eliminado: deletedAuthor
+        });
     } catch (error) {
         next(error);
     }
