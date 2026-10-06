@@ -2,6 +2,9 @@
 
 API REST para la gestión de autores, publicaciones y comentarios, desarrollada como proyecto integrador. Construida con Node.js, Express y PostgreSQL, enfocada en un diseño relacional robusto y código limpio.
 
+# Deployment 
+🚀link: https://proyectom2xavierdilorenzo-production-2821.up.railway.app/
+
 ## Tecnologías Utilizadas
 * **Backend:** Node.js, Express
 * **Base de Datos:** PostgreSQL, `pg` (node-postgres)
