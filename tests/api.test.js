@@ -31,6 +31,13 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
                 testAuthorId = res.body.id;
                 testAuthorName = res.body.name;
             });
+           
+            it('POST /authors - Debería devolver error 400 si el body está vacío o no se envía', async () => {
+                const res = await request(app).post('/authors').send({}); // Body vacío simulando la falla de Swagger
+                expect(res.statusCode).toBe(400);
+                expect(res.body).toHaveProperty('error');
+                expect(res.body.error).toBe('El cuerpo de la petición no puede estar vacío');
+            });
 
             it('Debería fallar si falta el nombre (400)', async () => {
                 const res = await request(app).post('/authors').send({ email: uniqueEmail() });
