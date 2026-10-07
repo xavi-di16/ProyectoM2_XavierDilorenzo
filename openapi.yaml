@@ -57,9 +57,24 @@ paths:
           required: true
           schema:
             type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                bio:
+                  type: string
       responses:
         '200':
           description: Autor actualizado
+        '400':
+          description: Faltan datos en la petición
     delete:
       summary: Eliminar un autor
       parameters:
@@ -79,6 +94,21 @@ paths:
           description: Lista de posts
     post:
       summary: Crear un nuevo post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                author_id:
+                  type: integer
+                published:
+                  type: boolean
       responses:
         '201':
           description: Post creado
