@@ -12,7 +12,15 @@ const badRequest = (message) => {
 };
 
 // partial = true -> PUT: solo se validan los campos enviados (pero debe venir al menos uno)
-const validateAuthor = ({ name, email, bio }, partial = false) => {
+const validateAuthor = (body, partial = false) => {
+    // 1. VALIDACIÓN DEFENSIVA: Previene el Error 500 si el body es undefined o está vacío {}
+    if (!body || Object.keys(body).length === 0) {
+        throw badRequest('El cuerpo de la petición no puede estar vacío');
+    }
+
+    // 2. Ahora es completamente seguro desestructurar
+    const { name, email, bio } = body;
+
     if (partial && name === undefined && email === undefined && bio === undefined) {
         throw badRequest('Debes enviar al menos un campo a actualizar: name, email o bio');
     }
