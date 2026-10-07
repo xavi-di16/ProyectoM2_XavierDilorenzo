@@ -1,3 +1,5 @@
+#Para el uso de Gemini use Chats temporales pero en resumen estas fueron las consultas realizadas
+
 1. Diseño y optimización del esquema relacional (PostgreSQL)
 
 Xavi: ¿Cómo armo el script setup.sql para crear las tablas de autores y posts en PostgreSQL, asegurando que si borro un autor se borren sus posts?
@@ -17,3 +19,6 @@ Gemini: En YAML, la indentación es la clave de la estructura. Tenés que defini
 
 Xavi: ¿Cómo escribo un test automatizado básico usando Vitest y Supertest para comprobar que la ruta principal de autores devuelve un código 200?
 Gemini: Primero, asegurate de exportar tu servidor al final de server.js usando module.exports = app. En tu archivo api.test.js, importá la app y request de supertest. Usa un bloque it asíncrono para ejecutar const res = await request(app).get('/authors') y validá el resultado con expect(res.statusCode).toBe(200).
+
+#Claude Code
+Para no llenar con imagenes de mucho codigo dejo el link de mi chat con claude donde pude ampliar las verificaciones y mejorar el test: https://claude.ai/share/395edd54-c199-4ae5-8c11-412188cb87eb
