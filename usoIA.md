@@ -1,4 +1,4 @@
-. Diseño y optimización del esquema relacional (PostgreSQL)
+1. Diseño y optimización del esquema relacional (PostgreSQL)
 
 Xavi: ¿Cómo armo el script setup.sql para crear las tablas de autores y posts en PostgreSQL, asegurando que si borro un autor se borren sus posts?
 Gemini: Para lograr eso, necesitás establecer una relación de clave foránea con la restricción ON DELETE CASCADE. Esto le indica a PostgreSQL que mantenga la integridad referencial automáticamente. Aquí tenés el fragmento exacto para la tabla de posts: author_id INTEGER REFERENCES authors(id) ON DELETE CASCADE.
