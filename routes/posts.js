@@ -11,7 +11,15 @@ const badRequest = (message) => {
 const isPositiveInt = (value) => /^[1-9]\d*$/.test(String(value));
 
 // partial = true -> PUT: solo se validan los campos enviados (pero debe venir al menos uno)
-const validatePost = ({ title, content, author_id, published }, partial = false) => {
+const validatePost = (body, partial = false) => {
+    // 1. VALIDACIÓN DEFENSIVA: Previene el Error 500 si el body es undefined o vacío
+    if (!body || Object.keys(body).length === 0) {
+        throw badRequest('El cuerpo de la petición no puede estar vacío');
+    }
+
+    // 2. Desestructuración segura
+    const { title, content, author_id, published } = body;
+
     if (partial && title === undefined && content === undefined && published === undefined) {
         throw badRequest('Debes enviar al menos un campo a actualizar: title, content o published');
     }
