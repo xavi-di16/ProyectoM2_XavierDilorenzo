@@ -10,7 +10,15 @@ const badRequest = (message) => {
 
 const isPositiveInt = (value) => /^[1-9]\d*$/.test(String(value));
 
-const validateComment = ({ content, post_id, author_id }) => {
+const validateComment = (body) => {
+    // 1. VALIDACIÓN DEFENSIVA: Previene el Error 500 si el body es undefined o vacío
+    if (!body || Object.keys(body).length === 0) {
+        throw badRequest('El cuerpo de la petición no puede estar vacío');
+    }
+
+    // 2. Desestructuración segura
+    const { content, post_id, author_id } = body;
+
     if (typeof content !== 'string' || content.trim().length < 3) {
         throw badRequest('El contenido es obligatorio y debe tener al menos 3 caracteres');
     }
