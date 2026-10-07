@@ -2,8 +2,11 @@
 
 API REST para la gestión de autores, publicaciones y comentarios, desarrollada como proyecto integrador. Construida con Node.js, Express y PostgreSQL, enfocada en un diseño relacional robusto y código limpio.
 
-# Deployment 
-🚀link: https://proyectom2xavierdilorenzo-production-2821.up.railway.app/
+
+# Deployment - Swagger
+🚀link principal: https://proyectom2xavierdilorenzo-production-2821.up.railway.app/
+👽Swagger: https://proyectom2xavierdilorenzo-production-2821.up.railway.app/api-docs
+
 
 ## Tecnologías Utilizadas
 * **Backend:** Node.js, Express
@@ -56,7 +59,7 @@ npm test
 
 ## Documentación API (Swagger UI)
 La documentación completa e interactiva de la API está disponible mediante Swagger UI. Una vez que el servidor esté corriendo, ingresa a:
-👉 **http://localhost:3000/api-docs**
+👉 **http://localhost:8080/api-docs**
 
 Desde allí podrás visualizar la estructura de los endpoints (GET, POST, PUT, DELETE) y realizar peticiones de prueba directamente desde el navegador.
 
