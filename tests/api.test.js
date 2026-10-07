@@ -144,7 +144,7 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
             it('Debería fallar si el body no trae ningún campo (400)', async () => {
                 const res = await request(app).put(`/authors/${testAuthorId}`).send({});
                 expect(res.status).toBe(400);
-                expect(res.body.error).toBe('Debes enviar al menos un campo a actualizar: name, email o bio');
+                expect(res.body.error).toBe('El cuerpo de la petición no puede estar vacío');
             });
 
             it('Debería fallar si el nombre nuevo es muy corto (400)', async () => {
@@ -320,7 +320,7 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
             it('Debería fallar si el body no trae ningún campo (400)', async () => {
                 const res = await request(app).put(`/posts/${testPostId}`).send({});
                 expect(res.status).toBe(400);
-                expect(res.body.error).toBe('Debes enviar al menos un campo a actualizar: title, content o published');
+                expect(res.body.error).toBe('El cuerpo de la petición no puede estar vacío');
             });
 
             it('Debería fallar si el título nuevo es muy corto (400)', async () => {
