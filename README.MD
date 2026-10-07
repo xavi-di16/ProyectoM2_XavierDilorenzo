@@ -82,6 +82,7 @@ Durante el desarrollo de esta API, se utilizó Inteligencia Artificial como herr
 * Implementación del patrón Pool para la conexión a la base de datos y la estructuración de servicios/rutas.
 * Generación del archivo YAML para la documentación con OpenAPI y Swagger UI.
 * Redacción de las pruebas unitarias y de integración utilizando Vitest y Supertest.
+[Especificacion de Consultas realizadas](usoIA.md)
 
 ---
 
