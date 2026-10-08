@@ -21,7 +21,5 @@ const validateId = (paramName = 'id') => (req, res, next) => {
     next();
 };
 
-module.exports = validateId;
-
-module.exports = errorHandler;
+module.exports = { errorHandler, validateId };
 

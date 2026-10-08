@@ -1,16 +1,15 @@
 const request = require('supertest');
-const app = require('../server'); // server.js debe terminar con "module.exports = app;"
+const app = require('../server'); 
 
 const uniqueEmail = (prefix = 'tester') => `${prefix}_${Date.now()}_${Math.floor(Math.random() * 1e6)}@example.com`;
 const NON_EXISTENT_ID = 999999;
 
 describe('Suite de Pruebas E2E - API MiniBlog', () => {
-    // IDs y datos compartidos entre tests
     let testAuthorId;
     let testAuthorName;
     let testPostId;
     let testPostTitle;
-    let testPostId2; // post dedicado a la prueba de DELETE (sin comentarios)
+    let testPostId2; 
 
     // ---------------------------------------------------------------
     // 1. AUTORES
@@ -25,15 +24,15 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
 
                 expect(res.status).toBe(201);
                 expect(res.body).toHaveProperty('id');
-                expect(res.body.name).toBe('Test Author');            // trim
-                expect(res.body.email).toBe(email.toLowerCase());     // toLowerCase + trim
+                expect(res.body.name).toBe('Test Author');            
+                expect(res.body.email).toBe(email.toLowerCase());     
 
                 testAuthorId = res.body.id;
                 testAuthorName = res.body.name;
             });
            
             it('POST /authors - Debería devolver error 400 si el body está vacío o no se envía', async () => {
-                const res = await request(app).post('/authors').send({}); // Body vacío simulando la falla de Swagger
+                const res = await request(app).post('/authors').send({}); 
                 expect(res.statusCode).toBe(400);
                 expect(res.body).toHaveProperty('error');
                 expect(res.body.error).toBe('El cuerpo de la petición no puede estar vacío');
@@ -101,7 +100,6 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
                 expect(res.status).toBe(400);
                 expect(res.body.error).toBe('El email ya está registrado');
 
-                // Limpieza del autor auxiliar
                 await request(app).delete(`/authors/${primero.body.id}`);
             });
         });
@@ -136,7 +134,7 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
 
                 expect(res.status).toBe(200);
                 expect(res.body.name).toBe('Autor Actualizado');
-                expect(res.body.email).toBe(antes.email); // COALESCE: no se pisa
+                expect(res.body.email).toBe(antes.email); 
 
                 testAuthorName = res.body.name;
             });
@@ -183,9 +181,9 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
 
                 expect(res.status).toBe(201);
                 expect(res.body).toHaveProperty('id');
-                expect(res.body.title).toBe('Título de prueba'); // trim
+                expect(res.body.title).toBe('Título de prueba'); 
                 expect(res.body.author_id).toBe(testAuthorId);
-                expect(res.body.published).toBe(false);          // default
+                expect(res.body.published).toBe(false);          
 
                 testPostId = res.body.id;
                 testPostTitle = res.body.title;
@@ -284,7 +282,7 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
                         author_id: NON_EXISTENT_ID
                     });
                 expect(res.status).toBe(400);
-                expect(res.body.error).toBe('El author_id especificado no existe'); // catch de Postgres (23503)
+                expect(res.body.error).toBe('El author_id especificado no existe'); 
             });
         });
 
@@ -306,7 +304,7 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
 
                 expect(res.status).toBe(200);
                 expect(res.body.title).toBe('Título actualizado');
-                expect(res.body.content).toBe('Contenido validado por el test'); // COALESCE
+                expect(res.body.content).toBe('Contenido validado por el test'); 
 
                 testPostTitle = res.body.title;
             });
@@ -362,8 +360,14 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
 
             expect(res.status).toBe(201);
             expect(res.body).toHaveProperty('id');
-            expect(res.body.content).toBe('Buen post!'); // trim
+            expect(res.body.content).toBe('Buen post!'); 
             expect(res.body.post_id).toBe(testPostId);
+        });
+
+        it('POST /comments - Debería fallar si el body está vacío (400)', async () => {
+            const res = await request(app).post('/comments').send({});
+            expect(res.status).toBe(400);
+            expect(res.body.error).toBe('El cuerpo de la petición no puede estar vacío');
         });
 
         it('POST /comments - Debería fallar si falta el contenido (400)', async () => {
@@ -401,7 +405,7 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
                 .post('/comments')
                 .send({ content: 'Comentario válido', post_id: NON_EXISTENT_ID, author_id: testAuthorId });
             expect(res.status).toBe(400);
-            expect(res.body.error).toBe('El post_id o author_id especificado no existe'); // catch de Postgres (23503)
+            expect(res.body.error).toBe('El post_id o author_id especificado no existe'); 
         });
 
         it('GET /comments/post/:postId - Debería listar los comentarios del post (200)', async () => {
@@ -410,6 +414,12 @@ describe('Suite de Pruebas E2E - API MiniBlog', () => {
             expect(Array.isArray(res.body)).toBe(true);
             expect(res.body.length).toBeGreaterThan(0);
             expect(res.body[0].post_id).toBe(testPostId);
+        });
+
+        it('GET /comments/post/:postId - Debería fallar si el postId es inválido (400)', async () => {
+            const res = await request(app).get('/comments/post/abc');
+            expect(res.status).toBe(400);
+            expect(res.body.error).toBe('El postId debe ser un número entero positivo');
         });
     });
 

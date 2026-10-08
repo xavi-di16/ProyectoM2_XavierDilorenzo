@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const postService = require('../services/postService');
+const { validateId } = require('../middlewares/errorHandler');
 
 const badRequest = (message) => {
     const error = new Error(message);
