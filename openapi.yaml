@@ -1,0 +1,462 @@
+openapi: 3.0.0
+info:
+  title: MiniBlog API
+  version: 1.0.0
+  description: API REST para la gestión de autores, publicaciones y comentarios de MiniBlog.
+servers:
+  - url: https://proyectom2xavierdilorenzo-production-2821.up.railway.app
+    description: Servidor de Producción (Railway)
+  - url: http://localhost:8080
+    description: Servidor Local
+tags:
+  - name: Authors
+    description: Gestión de autores
+  - name: Posts
+    description: Gestión de publicaciones
+  - name: Comments
+    description: Gestión de comentarios de las publicaciones (Extra Credit)
+paths:
+  /authors:
+    get:
+      tags: [Authors]
+      summary: Obtener todos los autores
+      responses:
+        '200':
+          description: Lista de autores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
+    post:
+      tags: [Authors]
+      summary: Crear un nuevo autor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorInput'
+      responses:
+        '201':
+          description: Autor creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '400':
+          description: >
+            Datos inválidos: cuerpo vacío, `name` con menos de 3 o más de 100 caracteres,
+            `email` ausente o con formato inválido, `bio` que no es texto, o email ya registrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /authors/{id}:
+    get:
+      tags: [Authors]
+      summary: Obtener un autor por ID
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Datos del autor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '404':
+          description: Autor no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags: [Authors]
+      summary: Actualizar un autor
+      description: Actualización parcial. Debe enviarse al menos uno de los campos `name`, `email` o `bio`.
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorUpdate'
+      responses:
+        '200':
+          description: Autor actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '400':
+          description: Cuerpo vacío, ningún campo a actualizar, datos inválidos o email ya registrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Autor no encontrado para actualizar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [Authors]
+      summary: Eliminar un autor
+      description: Elimina el autor y, en cascada, sus posts y comentarios.
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Autor eliminado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteAuthorResponse'
+        '404':
+          description: Autor no encontrado para eliminar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /posts:
+    get:
+      tags: [Posts]
+      summary: Obtener todos los posts
+      responses:
+        '200':
+          description: Lista de posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+    post:
+      tags: [Posts]
+      summary: Crear un nuevo post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostInput'
+      responses:
+        '201':
+          description: Post creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: >
+            Datos inválidos: cuerpo vacío, `title` con menos de 5 o más de 200 caracteres,
+            `content` con menos de 10 caracteres, `author_id` ausente o que no sea un entero positivo,
+            `published` que no sea booleano, o `author_id` que no existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /posts/{id}:
+    get:
+      tags: [Posts]
+      summary: Obtener un post por ID
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Datos del post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: Post no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags: [Posts]
+      summary: Actualizar un post
+      description: Actualización parcial. Debe enviarse al menos uno de los campos `title`, `content` o `published`. El `author_id` no se puede modificar.
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUpdate'
+      responses:
+        '200':
+          description: Post actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Cuerpo vacío, ningún campo a actualizar o datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post no encontrado para actualizar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [Posts]
+      summary: Eliminar un post
+      description: Elimina el post y, en cascada, sus comentarios.
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Post eliminado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletePostResponse'
+        '404':
+          description: Post no encontrado para eliminar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /posts/author/{authorId}:
+    get:
+      tags: [Posts]
+      summary: Obtener los posts de un autor
+      parameters:
+        - name: authorId
+          in: path
+          required: true
+          description: ID del autor
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Lista de posts del autor (vacía si no tiene posts)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+  /comments/post/{postId}:
+    get:
+      tags: [Comments]
+      summary: Obtener los comentarios de un post
+      description: Devuelve los comentarios del post ordenados del más antiguo al más reciente (`created_at`).
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          description: ID del post (entero positivo, máximo 2147483647)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      responses:
+        '200':
+          description: Lista de comentarios del post (vacía si no tiene comentarios)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '400':
+          description: El `postId` no es un número entero positivo válido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /comments:
+    post:
+      tags: [Comments]
+      summary: Crear un nuevo comentario
+      description: Crea un comentario asociado a un post y a un autor existentes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentInput'
+            example:
+              content: Excelente publicación, muy útil.
+              post_id: 1
+              author_id: 2
+      responses:
+        '201':
+          description: Comentario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: >
+            Petición inválida: cuerpo vacío, `content` con menos de 3 caracteres, `post_id` o `author_id`
+            ausentes o fuera del rango de enteros positivos (1 a 2147483647), o el post/autor no existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      description: ID del recurso
+      schema:
+        type: integer
+        minimum: 1
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Autor no encontrado
+        status:
+          type: integer
+          example: 404
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        bio:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    AuthorInput:
+      type: object
+      required: [name, email]
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        bio:
+          type: string
+          nullable: true
+    AuthorUpdate:
+      type: object
+      minProperties: 1
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        bio:
+          type: string
+          nullable: true
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+        author_id:
+          type: integer
+        published:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+    PostInput:
+      type: object
+      required: [title, content, author_id]
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 200
+        content:
+          type: string
+          minLength: 10
+        author_id:
+          type: integer
+          minimum: 1
+        published:
+          type: boolean
+    PostUpdate:
+      type: object
+      minProperties: 1
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 200
+        content:
+          type: string
+          minLength: 10
+        published:
+          type: boolean
+    DeleteAuthorResponse:
+      type: object
+      properties:
+        mensaje:
+          type: string
+        registro_eliminado:
+          $ref: '#/components/schemas/Author'
+    DeletePostResponse:
+      type: object
+      properties:
+        mensaje:
+          type: string
+        registro_eliminado:
+          $ref: '#/components/schemas/Post'
+    CommentInput:
+      type: object
+      required: [content, post_id, author_id]
+      properties:
+        content:
+          type: string
+          minLength: 3
+        post_id:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        author_id:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        post_id:
+          type: integer
+        author_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
