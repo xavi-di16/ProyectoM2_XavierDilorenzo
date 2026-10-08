@@ -31,6 +31,16 @@ const validateComment = (body) => {
     }
 };
 
+// GET /comments - Obtener todos los comentarios (NUEVO)
+router.get('/', async (req, res, next) => {
+    try {
+        const comments = await commentService.getAllComments();
+        res.json(comments);
+    } catch (error) {
+        next(error);
+    }
+});
+
 // GET /comments/post/:postId - Obtener los comentarios de un post
 router.get('/post/:postId', async (req, res, next) => {
     try {

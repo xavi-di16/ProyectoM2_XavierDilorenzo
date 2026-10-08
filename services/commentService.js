@@ -1,5 +1,11 @@
 const pool = require('../db/config');
 
+// Listar todos los comentarios (NUEVO)
+const getAllComments = async () => {
+    const result = await pool.query('SELECT * FROM comments ORDER BY created_at ASC');
+    return result.rows;
+};
+
 // Listar comentarios de un post específico
 const getCommentsByPost = async (postId) => {
     const result = await pool.query(
@@ -19,6 +25,7 @@ const createComment = async (content, post_id, author_id) => {
 };
 
 module.exports = {
+    getAllComments,
     getCommentsByPost,
     createComment
 };
