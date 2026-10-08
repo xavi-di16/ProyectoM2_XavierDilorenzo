@@ -8,6 +8,7 @@ servers:
     description: Servidor de Producción (Railway)
   - url: http://localhost:8080
     description: Servidor Local
+<<<<<<< HEAD
 tags:
   - name: Authors
     description: Gestión de autores
@@ -19,10 +20,16 @@ paths:
   /authors:
     get:
       tags: [Authors]
+=======
+paths:
+  /authors:
+    get:
+>>>>>>> 57de19130f1865af52d6d071e7e6dd3e4ceb143c
       summary: Obtener todos los autores
       responses:
         '200':
           description: Lista de autores
+<<<<<<< HEAD
           content:
             application/json:
               schema:
@@ -31,12 +38,16 @@ paths:
                   $ref: '#/components/schemas/Author'
     post:
       tags: [Authors]
+=======
+    post:
+>>>>>>> 57de19130f1865af52d6d071e7e6dd3e4ceb143c
       summary: Crear un nuevo autor
       requestBody:
         required: true
         content:
           application/json:
             schema:
+<<<<<<< HEAD
               $ref: '#/components/schemas/AuthorInput'
       responses:
         '201':
@@ -78,11 +89,49 @@ paths:
       description: Actualización parcial. Debe enviarse al menos uno de los campos `name`, `email` o `bio`.
       parameters:
         - $ref: '#/components/parameters/IdPath'
+=======
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                bio:
+                  type: string
+      responses:
+        '201':
+          description: Autor creado exitosamente
+        '400':
+          description: Faltan datos obligatorios o email duplicado
+  /authors/{id}:
+    get:
+      summary: Obtener un autor por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Datos del autor
+        '404':
+          description: Autor no encontrado
+    put:
+      summary: Actualizar un autor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+>>>>>>> 57de19130f1865af52d6d071e7e6dd3e4ceb143c
       requestBody:
         required: true
         content:
           application/json:
             schema:
+<<<<<<< HEAD
               $ref: '#/components/schemas/AuthorUpdate'
       responses:
         '200':
@@ -125,10 +174,39 @@ paths:
   /posts:
     get:
       tags: [Posts]
+=======
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                bio:
+                  type: string
+      responses:
+        '200':
+          description: Autor actualizado
+        '400':
+          description: Faltan datos en la petición
+    delete:
+      summary: Eliminar un autor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Autor eliminado
+  /posts:
+    get:
+>>>>>>> 57de19130f1865af52d6d071e7e6dd3e4ceb143c
       summary: Obtener todos los posts
       responses:
         '200':
           description: Lista de posts
+<<<<<<< HEAD
           content:
             application/json:
               schema:
@@ -137,12 +215,16 @@ paths:
                   $ref: '#/components/schemas/Post'
     post:
       tags: [Posts]
+=======
+    post:
+>>>>>>> 57de19130f1865af52d6d071e7e6dd3e4ceb143c
       summary: Crear un nuevo post
       requestBody:
         required: true
         content:
           application/json:
             schema:
+<<<<<<< HEAD
               $ref: '#/components/schemas/PostInput'
       responses:
         '201':
@@ -460,3 +542,30 @@ components:
         created_at:
           type: string
           format: date-time
+=======
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                author_id:
+                  type: integer
+                published:
+                  type: boolean
+      responses:
+        '201':
+          description: Post creado
+  /posts/{id}:
+    get:
+      summary: Obtener un post por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Datos del post
+>>>>>>> 57de19130f1865af52d6d071e7e6dd3e4ceb143c
